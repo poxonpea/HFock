@@ -11,3 +11,6 @@ lib/State.o: src/State.cpp include/State.hh
 
 lib/HartreeFock.o: include/State.hh src/HartreeFock.cpp include/HartreeFock.hh
 	$(CC) $(CFLAGS) -Iinclude -c src/HartreeFock.cpp -o lib/HartreeFock.o
+
+clean: 
+	$(RM) lib/*.o bin/*
