@@ -1,4 +1,5 @@
-class State{
+
+class State {
   public:
     State();
     ~State();
@@ -9,7 +10,7 @@ class State{
     //Calculates harmonic oscillator energy for number of nodes N, 
     //angular momentum quantum number L, and given  frequency W.
     //Returns (2*N+L+3/2)hbar*W
-    GetEnergy();
+    double GetEnergy();
 
     
 
@@ -22,5 +23,4 @@ class State{
     int j2;//total angular momentum
     int mj2;//total angular momentum z-projection
     int tz2;//isospin z-projection  
-
-}
+};
