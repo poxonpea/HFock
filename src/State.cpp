@@ -20,6 +20,6 @@ State::State(int state_index, int n, int l, int j2, int mj2, int tz2){
   this->tz2 = tz2;
 }
 double State::GetEnergy(){
-  const int HBARW = 10;//MeV
-  return (2*n+l+(3./2.)*HBARW);//MeV
+  const double HBARW = 10;//MeV
+  return (2*n+l+(3./2.))*HBARW;//MeV
 }
