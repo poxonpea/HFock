@@ -40,7 +40,7 @@ void HartreeFock::Run(std::string const &in_mat_file_name, std::string const &in
   }
   for (unsigned int i = 0; i < single_particle_states.size(); i++){
     harmonic_oscillator_energies(i,i) = single_particle_states.at(i).GetEnergy();
- //   prev_energies(i) = harmonic_oscillator_energies(i,i); 
+    prev_energies(i) = harmonic_oscillator_energies(i,i); 
   }
   std::cout << "Reading two body matrix elements from file: " << in_mat_file_name << std::endl;
   ReadMatrixElements(in_mat_file_name);
@@ -55,12 +55,10 @@ void HartreeFock::Run(std::string const &in_mat_file_name, std::string const &in
         single_particle_potential = 0;
         for (int gamma = 0; gamma < NUM_STATES; gamma++){
           for (int delta = 0; delta < NUM_STATES; delta++){
-            single_particle_potential += density_matrix(gamma,delta)*matrix_elements[alpha][beta][gamma][delta];
+            single_particle_potential += density_matrix(gamma,delta)*matrix_elements[alpha][gamma][beta][delta];
           }//loop over delta
         }//loop over gamma
-        if (single_particle_potential != 0){
-          std::cout << "Single particle potential = " << single_particle_potential << std::endl;
-        }
+        
         //Hamiltonian is Hermitian
         hamiltonian(alpha,beta) = harmonic_oscillator_energies(alpha,beta) + single_particle_potential;
         hamiltonian(beta,alpha) = harmonic_oscillator_energies(alpha,beta) + single_particle_potential;
@@ -73,7 +71,7 @@ void HartreeFock::Run(std::string const &in_mat_file_name, std::string const &in
 //  std::cout << "Eigenvectors After" << std::endl;
 //  std::cout << eigenvectors << std::endl;
 
-    if (iteration > 0 && IsConverged()){
+    if  (IsConverged()){
       std::cout << "Converged after " << iteration<< "!" << std::endl;
       break;
     }
@@ -86,11 +84,19 @@ void HartreeFock::Run(std::string const &in_mat_file_name, std::string const &in
 
 
 bool HartreeFock::IsConverged() const {
-  const double THRESHOLD = pow(10,-8);
+  const double THRESHOLD = pow(10,-10);
   vec diff = energies - prev_energies;
-  std::cout << "DIFF" << std::endl;
-  std::cout << diff << std::endl;
-  if (abs(diff.max()) < THRESHOLD){
+//std::cout << "fabs(diff.min()) = " << fabs(diff.min()) << std::endl;
+//std::cout << "THRESHOLD = " << THRESHOLD << std::endl;
+//std::cout << "DIFF" << std::endl;
+//std::cout << diff << std::endl;
+  double sum = 0;
+  for (int i = 0; i < NUM_STATES; i++){
+    sum += fabs(diff(i)); 
+  }
+  sum /= num_states;
+
+  if (sum < THRESHOLD){
     return true;
   }
   else {
