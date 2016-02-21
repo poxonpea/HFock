@@ -94,7 +94,7 @@ bool HartreeFock::IsConverged() const {
   for (int i = 0; i < NUM_STATES; i++){
     sum += fabs(diff(i)); 
   }
-  sum /= num_states;
+  sum /= NUM_STATES;
 
   if (sum < THRESHOLD){
     return true;
