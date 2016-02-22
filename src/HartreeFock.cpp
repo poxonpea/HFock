@@ -33,7 +33,6 @@ void HartreeFock::Run(std::string const &in_mat_file_name, std::string const &in
   std::cout << "Reading single particle states from file: " << in_sp_file_name << std::endl;
   ReadSingleParticleStates(in_sp_file_name);
   if (single_particle_states.size() != NUM_STATES){
-
     std::cout << "ERROR: Failed to get correct number of single particle states!" << std::endl;
     std::cout << "Expect: " << NUM_STATES << "\tFound: " << single_particle_states.size() << std::endl;
     return;
@@ -64,13 +63,7 @@ void HartreeFock::Run(std::string const &in_mat_file_name, std::string const &in
         hamiltonian(beta,alpha) = harmonic_oscillator_energies(alpha,beta) + single_particle_potential;
       }//loop over beta
     }//loop over alpha
-  
-//  std::cout << "Eigenvectors Before" << std::endl;
-//  std::cout << eigenvectors << std::endl;
     eig_sym(energies,eigenvectors,hamiltonian);
-//  std::cout << "Eigenvectors After" << std::endl;
-//  std::cout << eigenvectors << std::endl;
-
     if  (IsConverged()){
       std::cout << "Converged after " << iteration<< "!" << std::endl;
       break;
@@ -84,7 +77,7 @@ void HartreeFock::Run(std::string const &in_mat_file_name, std::string const &in
 
 
 bool HartreeFock::IsConverged() const {
-  const double THRESHOLD = pow(10,-10);
+  const double THRESHOLD = pow(10,-12);
   vec diff = energies - prev_energies;
 //std::cout << "fabs(diff.min()) = " << fabs(diff.min()) << std::endl;
 //std::cout << "THRESHOLD = " << THRESHOLD << std::endl;
