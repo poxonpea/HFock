@@ -79,7 +79,7 @@ void HartreeFock::Run(std::string const &in_mat_file_name, std::string const &in
     prev_energies = energies;
     iteration++;
   }//while iteration < MAX_ITERATIONS and not converged
-  SaveToFile(out_file_name, harmonic_oscillator_energies);
+  SaveToFile(out_file_name, harmonic_oscillator_energies, single_particle_states);
 }
 
 
@@ -104,16 +104,43 @@ bool HartreeFock::IsConverged() const {
   }
 }
 
-void HartreeFock::SaveToFile(std::string const &file_name, mat &harmonic_oscillator_energies) const{
-  std::ofstream out_file;
-  out_file.open(file_name.c_str());
-  if (!out_file.is_open()){
+void HartreeFock::SaveToFile(std::string const &file_name, mat &harmonic_oscillator_energies, std::vector<State> &states) const{
+  std::ofstream proton_out_file;
+  std::ofstream neutron_out_file;
+  std::string proton_file_name = "proton_"+file_name;
+  std::string neutron_file_name = "neutron_"+file_name;
+
+  proton_out_file.open(proton_file_name.c_str());
+  if (!proton_out_file.is_open()){
+    std::cout << "ERROR: Failed to open output file!" << std::endl;
+  }
+  neutron_out_file.open(neutron_file_name.c_str());
+  if (!neutron_out_file.is_open()){
     std::cout << "ERROR: Failed to open output file!" << std::endl;
   }
 
-  out_file << "HO Energies\tCalculated Energies" << std::endl;
+  proton_out_file << "HO Energies\tHF Energies\tnlj\tmj\ttz" << std::endl;
+  neutron_out_file << "HO Energies\tHF Energies\tnlj\tmj\ttz" << std::endl;
+  std::vector<std::string> shell_names;// = {"s","p","d","f","g"};
+  shell_names.push_back("s");
+  shell_names.push_back("p");
+  shell_names.push_back("d");
+  shell_names.push_back("f");
+  shell_names.push_back("g");
+  shell_names.push_back("h");
+
   for (int i = 0; i < NUM_STATES; i++){
-    out_file << harmonic_oscillator_energies(i,i) <<"\t"<<energies(i) << std::endl; 
+    if (states.at(i).tz2 < 0){
+      proton_out_file << harmonic_oscillator_energies(i,i) <<"\t"<<energies(i) << "\t "  
+                      << states.at(i).n << shell_names.at(states.at(i).l) << states.at(i).j2 << "/2\t" 
+                      << states.at(i).mj2 <<"/2\t" << states.at(i).tz2 << "/2" << std::endl; 
+    }
+    else if (states.at(i).tz2 > 0){
+      neutron_out_file << harmonic_oscillator_energies(i,i) <<"\t"<<energies(i) << "\t "  
+                        << states.at(i).n << shell_names.at(states.at(i).l) << states.at(i).j2 << "/2\t" 
+                        << states.at(i).mj2 <<"/2\t" << states.at(i).tz2 << "/2" << std::endl; 
+
+    }
   }
 }
 

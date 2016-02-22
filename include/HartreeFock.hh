@@ -25,7 +25,7 @@ class HartreeFock {
     bool IsConverged() const;
 
     //Write energies and eigenvectors to file
-    void SaveToFile(std::string const & file_name, arma::mat &) const;
+    void SaveToFile(std::string const & file_name, arma::mat &, std::vector<State>&) const;
 
     //Fills the 80x80 matrix_elements array
     void ReadMatrixElements(std::string const &in_mat_file_name);
