@@ -112,8 +112,8 @@ void HartreeFock::SaveToFile(std::string const &file_name, mat &harmonic_oscilla
     std::cout << "ERROR: Failed to open output file!" << std::endl;
   }
 
-  proton_out_file << "HO Energies\tHF Energies\tnlj\tmj\ttz" << std::endl;
-  neutron_out_file << "HO Energies\tHF Energies\tnlj\tmj\ttz" << std::endl;
+  proton_out_file << "HO Energies\tHF Energies\tOrbital#\tnlj\tmj\ttz" << std::endl;
+  neutron_out_file << "HO Energies\tHF Energies\tOrbital#\tnlj\tmj\ttz" << std::endl;
   std::vector<std::string> shell_names;// = {"s","p","d","f","g"};
   shell_names.push_back("s");
   shell_names.push_back("p");
@@ -124,15 +124,14 @@ void HartreeFock::SaveToFile(std::string const &file_name, mat &harmonic_oscilla
 
   for (int i = 0; i < NUM_STATES; i++){
     if (states.at(i).tz2 < 0){
-      proton_out_file << harmonic_oscillator_energies(i,i) <<"\t"<<energies(i) << "\t "  
+      proton_out_file << harmonic_oscillator_energies(i,i) <<"\t"<<energies(i) << "\t" <<states.at(i).state_index<<"\t"
                       << states.at(i).n << shell_names.at(states.at(i).l) << states.at(i).j2 << "/2\t" 
                       << states.at(i).mj2 <<"/2\t" << states.at(i).tz2 << "/2" << std::endl; 
     }
     else if (states.at(i).tz2 > 0){
-      neutron_out_file << harmonic_oscillator_energies(i,i) <<"\t"<<energies(i) << "\t "  
+      neutron_out_file << harmonic_oscillator_energies(i,i) <<"\t"<<energies(i) << "\t" <<states.at(i).state_index<<"\t" 
                         << states.at(i).n << shell_names.at(states.at(i).l) << states.at(i).j2 << "/2\t" 
                         << states.at(i).mj2 <<"/2\t" << states.at(i).tz2 << "/2" << std::endl; 
-
     }
   }
 }
